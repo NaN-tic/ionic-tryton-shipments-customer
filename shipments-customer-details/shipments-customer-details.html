@@ -1,0 +1,66 @@
+<ion-header class="output-shipment-select">
+  <ion-navbar>
+    <ion-title>{{'Customer Shipment' | translate}}: {{ shipment['number'] }}</ion-title>
+  </ion-navbar>
+  <button class="notes_btn" ion-button (click)="routeToNotes()">{{'Notes' | translate}}</button>
+</ion-header>
+
+<ion-grid class="out-wrapper">
+  <div class="input_field">
+    <ion-list>
+      <ion-item>
+        <ion-label color="primary"> {{'Product' | translate }}:</ion-label>
+        <ion-input id="test" #focusInput2
+        type="number"
+        [(ngModel)]="productSearchInput"
+        (keyup.enter)="searchInProducts($event)" autofocus>
+      </ion-input>
+        <br>
+      </ion-item>
+    </ion-list>
+  </div>
+
+  <ion-row class="header">
+    <ion-col width-50>
+      <div>{{'Product' | translate}}</div>
+    </ion-col>
+    <ion-col>
+      <div>{{'Quantity' | translate}}</div>
+    </ion-col>
+    <ion-col>
+      <div>{{'Lot' | translate}}</div>
+    </ion-col>
+    <ion-col>
+      <div>{{'From Location' | translate}}</div>
+    </ion-col>
+    <ion-col col-auto>
+      <div></div>
+    </ion-col>
+  </ion-row>
+
+  <ion-row *ngFor="let m of moves" id="{{ m['id'] }}">
+    <ion-col width-50>
+      <div>{{ m['product.name'] }}</div>
+    </ion-col>
+    <ion-col>
+      <div>{{ m['quantity'] }}</div>
+    </ion-col>
+    <ion-col>
+      <div>{{ m['lot.number'] }}</div>
+    </ion-col>
+    <ion-col>
+      <div>{{ m['from_location.rec_name'] }}</div>
+    </ion-col>
+    <ion-col col-auto>
+      <div>
+        <button class="del" (click)="deleteLine(m['id'])"></button>
+      </div>
+    </ion-col>
+  </ion-row>
+</ion-grid>
+
+<ion-footer>
+  <ion-toolbar>
+    <button class="assign" ion-button (click)="pack()">{{'Pack' | translate}}</button>
+  </ion-toolbar>
+</ion-footer>

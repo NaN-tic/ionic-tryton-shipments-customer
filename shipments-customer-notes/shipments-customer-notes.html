@@ -1,0 +1,30 @@
+<ion-header class="output-shipment-select">
+  <ion-navbar>
+    <ion-title>{{'Notes Customer Shipment' | translate}}: {{ shipment['number'] }}</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <div class="title">
+    <ion-title>{{'Notes' | translate}}</ion-title>
+  </div>
+
+  <ion-row>
+    <ion-col >
+      <div>{{ shipment['comment'] }}</div>
+    </ion-col>
+  </ion-row>
+
+  <ion-item>
+    <ion-label floating>{{'Notes' | translate}}</ion-label>
+    <ion-textarea #notes maxlength="500" name="notes"></ion-textarea>
+  </ion-item>
+</ion-content>
+
+<ion-footer>
+    <ion-toolbar color="primary">
+      <ion-buttons right>
+        <button ion-button class="save" (click)="saveNote()">{{'Save' | translate}}</button>
+      </ion-buttons>
+    </ion-toolbar>
+</ion-footer>
