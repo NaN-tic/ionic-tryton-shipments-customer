@@ -32,7 +32,7 @@ export class CustomerShipmentsDetailsPage implements OnInit{
 
     this.shipment = navParams.get('shipment');
     this.fields = ['company', 'number', 'reference', 'customer.name', 'comment',
-      'planned_date', 'state', 'inventory_moves', 'outgoing_moves'];
+      'planned_date', 'state', 'inventory_moves:[]', 'outgoing_moves:[]'];
     let json_constructor = new EncodeJSONRead;
     this.domain = [json_constructor.createDomain('id', '=', this.shipment.id)];
   }
@@ -45,9 +45,12 @@ export class CustomerShipmentsDetailsPage implements OnInit{
 
   getShipmentMoves() {
     let method = 'stock.move';
-    let domain = [['id', 'in', this.shipment.inventory_moves]];
-    let fields = ['product', 'product.name', 'quantity',
-      'from_location.rec_name', 'to_location.rec_name', 'lot.number'];
+    let ids = [];
+    for (let move of this.shipment.inventory_moves) {
+      ids.push(move['id']);
+    }
+    let domain = [['id', 'in', ids]];
+    let fields = ['product.name', 'quantity', 'from_location.rec_name', 'to_location.rec_name', 'lot.number'];
 
     let json_constructor = new EncodeJSONRead;
     json_constructor.addNode(method, domain, fields);
@@ -56,7 +59,7 @@ export class CustomerShipmentsDetailsPage implements OnInit{
     return this.trytonProvider.search(json).subscribe(
       data => {
         this.moves = data['stock.move'];
-        console.log(this.moves);
+        // console.log(this.moves);
       },
       error => {
         console.log(error);
@@ -84,10 +87,10 @@ export class CustomerShipmentsDetailsPage implements OnInit{
         this.scannig_item = item;
       }
     });
-    this.searchInProducts()
+    this.donePicking()
   }
 
-  searchInProducts() {
+  donePicking() {
     let qty = this.productSearchInput.toLowerCase();
     if ((this.productSearchInput.length >= 1) && Number(qty) > 0){
       // this.scannig_item['quantity'] = +qty;
@@ -114,7 +117,7 @@ export class CustomerShipmentsDetailsPage implements OnInit{
     }
   }
 
-  clearSearchInProducts() {
+  clearDonePicking() {
     let cls = ['red', 'gray'];
     this.moves.filter(item => {document.getElementById(item['id']).classList.remove(...cls); document.getElementById(this.moves[0]['id']).classList.add('red')});
   }
