@@ -31,8 +31,8 @@ export class CustomerShipmentsListPage extends InfiniteList {
 
     this.method = 'stock.shipment.out';
     this.domain = [['state', '=', 'assigned']];
-    this.fields = ['company', 'number', 'reference', 'customer.name', 'comment',
-      'planned_date', 'state', 'inventory_moves', 'outgoing_moves'];
+    this.fields = ['number', 'reference', 'customer.name', 'comment',
+      'planned_date', 'state', 'inventory_moves:[]', 'outgoing_moves:[]'];
   }
 
   ionViewWillEnter() {

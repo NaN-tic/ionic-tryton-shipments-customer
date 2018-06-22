@@ -10,10 +10,10 @@
     <ion-list>
       <ion-item>
         <ion-label color="primary"> {{'Product' | translate }}:</ion-label>
-        <ion-input id="test" #focusInput2
+        <ion-input id="quantity" #quantity
         type="number"
         [(ngModel)]="productSearchInput"
-        (keyup.enter)="searchInProducts($event)" autofocus>
+        (keyup.enter)="donePicking($event)" autofocus>
       </ion-input>
         <br>
       </ion-item>
