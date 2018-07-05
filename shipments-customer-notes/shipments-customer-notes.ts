@@ -1,5 +1,6 @@
 import { Component, HostListener, ElementRef } from "@angular/core";
 import { NavController, NavParams } from "ionic-angular";
+import { Keyboard } from 'ionic-native';
 
 import { EncodeJSONRead } from '../../ngx-tryton-json/encode-json-read';
 import { EncodeJSONWrite } from '../../ngx-tryton-json/encode-json-write';
@@ -48,6 +49,12 @@ export class CustomerShipmentsNotesPage {
         console.log("Error", error);
         alert(error.messages[0])
       })
+  }
+
+  ngAfterViewInit(){
+      Keyboard.show();
+      document.getElementById('notes').focus();
+      // Keyboard.close();
   }
 
   @HostListener("input", ["$event.target"])
