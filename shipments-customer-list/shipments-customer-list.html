@@ -25,6 +25,11 @@
               </ion-row>
               <ion-row (click)="itemSelected($event, item)">
                 <ion-col width-100 class="f-size">
+                  <strong>{{ 'Party' | translate }}</strong>: {{ item['customer.name'] }}
+                </ion-col>
+              </ion-row>
+              <ion-row (click)="itemSelected($event, item)">
+                <ion-col width-100 class="f-size">
                   <strong>{{ 'Reference' | translate }}</strong>: {{ item.reference }}
                 </ion-col>
               </ion-row>
