@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { NavController, NavParams } from "ionic-angular";
 
 import { EncodeJSONRead } from '../../ngx-tryton-json/encode-json-read';
+import { EncodeJSONWrite } from '../../ngx-tryton-json/encode-json-write';
 import { TrytonProvider } from '../../ngx-tryton-providers/tryton-provider';
 
 import { CustomerShipmentsNotesPage } from "../shipments-customer-notes/shipments-customer-notes";
@@ -49,7 +50,7 @@ export class CustomerShipmentsDetailsPage implements OnInit{
     for (let move of this.shipment.inventory_moves) {
       ids.push(move['id']);
     }
-    let domain = [['id', 'in', ids]];
+    let domain = [['id', 'in', ids], ['state', 'in', ['draft', 'assigned']]];
     let fields = ['product.name', 'quantity', 'from_location.rec_name', 'to_location.rec_name', 'lot.number'];
 
     let json_constructor = new EncodeJSONRead;
@@ -67,17 +68,26 @@ export class CustomerShipmentsDetailsPage implements OnInit{
     );
   }
 
-  scanned_move(move_id:string, quantity: string) {
-    let method = "stock.move";
-    let domain = [['to_location', '=', 'warehouse_output'], ['state', '=' , ' draft']];
-    let fields:any = [{'move_id': move_id, 'quantity': quantity}];
-
-    let json_constructor = new EncodeJSONRead;
-    json_constructor.addNode(method, domain, fields);
-    let json = json_constructor.createJson();
+  scanned_move(move_id: number, quantity: number) {
+    let json_constructor = new EncodeJSONWrite;
+    let values = {quantity: quantity}
+    json_constructor.addNode('stock.move', [move_id, values])
+    let json = json_constructor.createJSON()
     this.trytonProvider.write(json).subscribe(
-      data => console.log(data)
-    );
+      data => {
+        // console.log('Update move '+move_id+' and quantity '+quantity);
+        this.trytonProvider.rpc_call("model.stock.move.do", [[move_id]]).subscribe(
+          data => {
+            // console.log('Done '+move_id);
+          },
+          error => {
+            console.log(error);
+          })
+      },
+      error => {
+        console.log(error);
+        alert(error.messages[0]);
+      })
   }
 
   scanningProcces() {
@@ -95,8 +105,8 @@ export class CustomerShipmentsDetailsPage implements OnInit{
     if ((this.productSearchInput.length >= 1) && Number(qty) > 0){
       // this.scannig_item['quantity'] = +qty;
       this.moves.filter((item, i) => {
-
         if (this.scannig_item['id'] == item['id']) {
+          this.scanned_move(this.scannig_item['id'], qty);
           // alert('change red to gray')
           // document.getElementById(item['id']).classList.remove('red');
           // document.getElementById(item['id']).classList.add('gray');
